@@ -1,0 +1,31 @@
+{
+  "name": "flownative/flow-test-distribution",
+  "config": {
+    "vendor-dir": "Packages/Libraries",
+    "bin-dir": "bin"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "DistributionPackages/*"
+    }
+  ],
+  "require": {
+    "flownative/beach-configuration": "*"
+  },
+  "require-dev": {
+    "neos/buildessentials": "5.*",
+    "mikey179/vfsstream": "1.6.*",
+    "phpunit/phpunit": "6.*",
+    "symfony/css-selector": "2.*",
+    "neos/behat": "5.*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-update-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
+    "post-install-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
+    "post-package-update": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall",
+    "post-package-install": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall"
+  }
+}

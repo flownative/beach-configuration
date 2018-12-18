@@ -1,13 +1,12 @@
 stages:
-  - compile
   - test
 
 variables:
   PROJECT_NAME: 'beach-configuration'
 
-composer:
-  stage: compile
-  image: registry.gitlab.com/flownative/docker/composer:1
+test:
+  stage: test
+  image: registry.gitlab.com/flownative/docker/composer:7.2
   artifacts:
     paths:
       - '*'
@@ -16,20 +15,14 @@ composer:
     expire_in: 1 day
   script:
     - ls -la
+    - mkdir DistributionPackages
+    - 'mv * DistributionPackages/'
+    - 'mv .* DistributionPackages/'
+    - cp DistributionPackages/Tests/test-distribution-composer.json /composer.json
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
     - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
     - composer -o -v --no-progress --ignore-platform-reqs install
     - ls -la
-
-test:
-  stage: test
-  image: registry.gitlab.com/flownative/docker/php:7.2
-  variables:
-    GIT_STRATEGY: none
-  dependencies:
-    - composer
-  script:
-    - ls -la
-    - bin/phpunit -c /application/Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox Tests/Unit
+    - Packages/Libraries/phpunit/phpunit/phpunit -c /Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/Flownative.Beach.Configuration/Tests/Unit
