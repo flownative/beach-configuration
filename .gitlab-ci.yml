@@ -18,11 +18,12 @@ test:
     - mkdir DistributionPackages
     - shopt -s extglob
     - 'mv !(DistributionPackages) DistributionPackages/'
-    - cp DistributionPackages/Tests/test-distribution-composer.json /composer.json
+    - cp DistributionPackages/Tests/test-distribution-composer.json composer.json
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
     - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
+    - ls -la
     - composer -o -v --no-progress --ignore-platform-reqs install
     - ls -la
     - Packages/Libraries/phpunit/phpunit/phpunit -c /Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/Flownative.Beach.Configuration/Tests/Unit
