@@ -1,0 +1,16 @@
+{
+    "name": "flownative/beach-configuration",
+    "type": "neos-package",
+    "description": "Flownative Beach Configuration",
+    "license": "proprietary",
+    "support": {
+        "email": "support@flownative.com"
+    },
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Flownative\\Beach\\Configuration\\": "Classes"
+        }
+    }
+}
