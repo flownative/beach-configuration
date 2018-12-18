@@ -1,0 +1,40 @@
+stages:
+  - compile
+  - test
+
+variables:
+  PROJECT_NAME: 'beach-configuration'
+
+composer:
+  stage: compile
+  image: registry.gitlab.com/flownative/docker/composer:1
+  artifacts:
+    paths:
+      - Packages/Framework
+      - Packages/Libraries
+      - Packages/Application
+      - bin
+      - Web
+      - flow
+      - composer.*
+      - Configuration
+      - beach*
+      - BeachBuildVersion
+    name: ${PROJECT_NAME}-${CI_COMMIT_SHA}
+    when: on_success
+    expire_in: 1 day
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
+    - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
+    - composer --no-dev -o -v --no-progress --ignore-platform-reqs install
+    - echo "${CI_COMMIT_TAG}" > BeachBuildVersion
+
+test:
+  stage: test
+  image: registry.gitlab.com/flownative/docker/php:7.2
+  dependencies:
+    - composer
+  script:
+    - /application/Packages/Libraries/phpunit/phpunit/phpunit -c /application/Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox Packages/Application/Flownative.Beach.Configuration/Tests/Unit
