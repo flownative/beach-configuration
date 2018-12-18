@@ -32,4 +32,4 @@ test:
     - composer
   script:
     - ls -la
-    - /application/Packages/Libraries/phpunit/phpunit/phpunit -c /application/Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox Packages/Application/Flownative.Beach.Configuration/Tests/Unit
+    - bin/phpunit -c /application/Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox Tests/Unit
