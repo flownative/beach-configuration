@@ -34,6 +34,8 @@ composer:
 test:
   stage: test
   image: registry.gitlab.com/flownative/docker/php:7.2
+  variables:
+    GIT_STRATEGY: none
   dependencies:
     - composer
   script:

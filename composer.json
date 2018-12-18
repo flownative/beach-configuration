@@ -10,6 +10,13 @@
         "neos/flow": "~5.1",
         "symfony/yaml": "4.*"
     },
+    "require-dev": {
+        "neos/buildessentials": "5.*",
+        "mikey179/vfsstream": "1.6.*",
+        "phpunit/phpunit": "6.*",
+        "symfony/css-selector": "2.*",
+        "neos/behat": "5.*"
+    },
     "autoload": {
         "psr-4": {
             "Flownative\\Beach\\Configuration\\": "Classes"
