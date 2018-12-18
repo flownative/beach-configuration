@@ -10,7 +10,7 @@ composer:
   image: registry.gitlab.com/flownative/docker/composer:1
   artifacts:
     paths:
-      - *
+      - '*'
     name: ${PROJECT_NAME}-${CI_COMMIT_SHA}
     when: on_success
     expire_in: 1 day
