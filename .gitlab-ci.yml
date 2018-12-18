@@ -16,8 +16,8 @@ test:
   script:
     - ls -la
     - mkdir DistributionPackages
-    - 'mv * DistributionPackages/'
-    - 'mv .* DistributionPackages/'
+    - shopt -s extglob
+    - 'mv !(DistributionPackages) DistributionPackages/'
     - cp DistributionPackages/Tests/test-distribution-composer.json /composer.json
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
