@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "flownative/beach-configuration": "*"
+    "${COMPOSER_PACKAGE_NAME}": "*"
   },
   "require-dev": {
     "neos/buildessentials": "5.*",
