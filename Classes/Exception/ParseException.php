@@ -1,5 +1,5 @@
 <?php
-namespace Flownative\Beach\Configuration;
+namespace Flownative\Beach\Configuration\Exception;
 
 /*
  * This file is part of the Flownative.Beach.Configuration package.
@@ -7,7 +7,8 @@ namespace Flownative\Beach\Configuration;
  * (c) Flownative GmbH - www.flownative.com
  */
 
-final class BuilderConfiguration
-{
+use Neos\Flow\Exception;
 
+class ParseException extends Exception
+{
 }

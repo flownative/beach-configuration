@@ -7,7 +7,8 @@ namespace Flownative\Beach\Configuration\Tests\Unit;
  * (c) Flownative GmbH - www.flownative.com
  */
 
-use Flownative\Beach\Configuration\BuilderConfiguration;
+use Flownative\Beach\Configuration\Builder\Steps;
+use Flownative\Beach\Configuration\Builder\Builder;
 use Flownative\Beach\Configuration\Configuration;
 use Neos\Flow\Tests\UnitTestCase;
 
@@ -23,10 +24,25 @@ class ConfigurationParserTest extends UnitTestCase
 
     /**
      * @test
+     * @expectedException \Flownative\Beach\Configuration\Exception\ParseException
+     * @expectedExceptionCode 1545237279
+     */
+    public function configurationRejectsUnknownTopLevelEntries(): void
+    {
+        Configuration::fromYamlSource(
+            <<<YAML
+something: []
+builder: []
+YAML
+        );
+    }
+
+    /**
+     * @test
      */
     public function builderReturnsBuilderConfigurationObject(): void
     {
-        self::assertInstanceOf(BuilderConfiguration::class, Configuration::fromYamlSource(
+        self::assertInstanceOf(Builder::class, Configuration::fromYamlSource(
 <<<YAML
 builder: []
 YAML
@@ -39,5 +55,32 @@ YAML
     public function builderReturnsNullIfNoBuilderConfigurationWasSpecified(): void
     {
         self::assertNull(Configuration::fromYamlSource('')->builder());
+    }
+
+    /**
+     * @test
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
+     */
+    public function stepsReturnsBuildSteps(): void
+    {
+        self::assertInstanceOf(Steps::class, Configuration::fromYamlSource(
+            <<<YAML
+builder:
+  steps: []
+YAML
+        )->builder()->steps());
+    }
+
+    /**
+     * @test
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
+     */
+    public function stepsReturnsNullIfNoBuildStepsWereSpecified(): void
+    {
+        self::assertNull(Configuration::fromYamlSource(
+            <<<YAML
+builder: []
+YAML
+        )->builder()->steps());
     }
 }
