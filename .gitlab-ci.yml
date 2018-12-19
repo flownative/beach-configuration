@@ -5,6 +5,7 @@ variables:
   PROJECT_NAME: 'beach-configuration'
   FLOW_PACKAGE_KEY: 'Flownative.Beach.Configuration'
   COMPOSER_PACKAGE_NAME: 'flownative/beach-configuration'
+  BEACH_PHP_MEMORY_LIMIT: '500M'
 test:
   stage: test
   image: registry.gitlab.com/flownative/docker/composer:7.2
@@ -21,12 +22,10 @@ test:
     - "mv !(DistributionPackages) DistributionPackages/${FLOW_PACKAGE_KEY}"
     - echo "eyJuYW1lIjogImZsb3duYXRpdmUvZmxvdy10ZXN0LWRpc3RyaWJ1dGlvbiIsICJjb25maWciOiB7InZlbmRvci1kaXIiOiAiUGFja2FnZXMvTGlicmFyaWVzIiwgImJpbi1kaXIiOiAiYmluIn0sICJyZXBvc2l0b3JpZXMiOiBbIHsidHlwZSI6ICJwYXRoIiwgICAgICAidXJsIjogIkRpc3RyaWJ1dGlvblBhY2thZ2VzLyoiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAgICBdLAogICAgInJlcXVpcmUiOiB7CiAgICAgICIke0NPTVBPU0VSX1BBQ0tBR0VfTkFNRX0iOiAiKiIKICAgIH0sCiAgICAicmVxdWlyZS1kZXYiOiB7CiAgICAgICJuZW9zL2J1aWxkZXNzZW50aWFscyI6ICI1LioiLAogICAgICAibWlrZXkxNzkvdmZzc3RyZWFtIjogIjEuNi4qIiwKICAgICAgInBocHVuaXQvcGhwdW5pdCI6ICI2LioiLAogICAgICAic3ltZm9ueS9jc3Mtc2VsZWN0b3IiOiAiMi4qIiwKICAgICAgIm5lb3MvYmVoYXQiOiAiNS4qIgogICAgfSwKICAgICJtaW5pbXVtLXN0YWJpbGl0eSI6ICJkZXYiLAogICAgInByZWZlci1zdGFibGUiOiB0cnVlLAogICAgInNjcmlwdHMiOiB7CiAgICAgICJwb3N0LXVwZGF0ZS1jbWQiOiAiTmVvc1xcRmxvd1xcQ29tcG9zZXJcXEluc3RhbGxlclNjcmlwdHM6OnBvc3RVcGRhdGVBbmRJbnN0YWxsIiwKICAgICAgInBvc3QtaW5zdGFsbC1jbWQiOiAiTmVvc1xcRmxvd1xcQ29tcG9zZXJcXEluc3RhbGxlclNjcmlwdHM6OnBvc3RVcGRhdGVBbmRJbnN0YWxsIiwKICAgICAgInBvc3QtcGFja2FnZS11cGRhdGUiOiAiTmVvc1xcRmxvd1xcQ29tcG9zZXJcXEluc3RhbGxlclNjcmlwdHM6OnBvc3RQYWNrYWdlVXBkYXRlQW5kSW5zdGFsbCIsCiAgICAgICJwb3N0LXBhY2thZ2UtaW5zdGFsbCI6ICJOZW9zXFxGbG93XFxDb21wb3NlclxcSW5zdGFsbGVyU2NyaXB0czo6cG9zdFBhY2thZ2VVcGRhdGVBbmRJbnN0YWxsIgogICAgfQogIH0KICA=" | base64 -d > composer.template.json
     - envsubst < composer.template.json > composer.json
-    - cat composer.json
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
     - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
     - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
-    - ls -la
     - composer -o -v --no-progress update
     - ls -la
     - Packages/Libraries/phpunit/phpunit/phpunit -c /Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/${FLOW_PACKAGE_KEY}/Tests/Unit
