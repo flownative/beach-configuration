@@ -16,7 +16,7 @@ test:
     expire_in: 1 day
   script:
     - ls -la
-    - mkdir -p DistributionPackages/${PACKAGE_KEY}
+    - mkdir -p DistributionPackages/${FLOW_PACKAGE_KEY}
     - shopt -s extglob
     - "mv !(DistributionPackages) DistributionPackages/${FLOW_PACKAGE_KEY}"
     - DistributionPackages/Tests/test-distribution-composer.json < envsubst > composer.json
