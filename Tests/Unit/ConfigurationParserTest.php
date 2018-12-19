@@ -9,7 +9,6 @@ namespace Flownative\Beach\Configuration\Tests\Unit;
 
 use Flownative\Beach\Configuration\BuilderConfiguration;
 use Flownative\Beach\Configuration\Configuration;
-use Flownative\Beach\Configuration\ConfigurationParser;
 use Neos\Flow\Tests\UnitTestCase;
 
 class ConfigurationParserTest extends UnitTestCase
@@ -17,10 +16,9 @@ class ConfigurationParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function parseReturnsConfigurationObject(): void
+    public function createFromYamlSourceReturnsConfigurationObject(): void
     {
-        $parser = new ConfigurationParser();
-        self::assertInstanceOf(Configuration::class, $parser->parse(''));
+        self::assertInstanceOf(Configuration::class, Configuration::fromYamlSource(''));
     }
 
     /**
@@ -28,8 +26,7 @@ class ConfigurationParserTest extends UnitTestCase
      */
     public function builderReturnsBuilderConfigurationObject(): void
     {
-        $parser = new ConfigurationParser();
-        self::assertInstanceOf(BuilderConfiguration::class, $parser->parse(
+        self::assertInstanceOf(BuilderConfiguration::class, Configuration::fromYamlSource(
 <<<YAML
 builder: []
 YAML
@@ -41,7 +38,6 @@ YAML
      */
     public function builderReturnsNullIfNoBuilderConfigurationWasSpecified(): void
     {
-        $parser = new ConfigurationParser();
-        self::assertNull($parser->parse('')->builder());
+        self::assertNull(Configuration::fromYamlSource('')->builder());
     }
 }

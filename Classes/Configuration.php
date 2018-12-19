@@ -17,12 +17,21 @@ final class Configuration
     private $builderConfiguration;
 
     /**
-     * @param string $yamlSource
      */
-    public function __construct(string $yamlSource)
+    private function __construct()
     {
+    }
+
+    /**
+     * @param string $yamlSource
+     * @return Configuration
+     */
+    public static function fromYamlSource(string $yamlSource): Configuration
+    {
+        $configuration = new Configuration();
         $yaml = Yaml::parse($yamlSource);
-        $this->builderConfiguration = isset($yaml['builder']) ? new BuilderConfiguration() : null;
+        $configuration->builderConfiguration = isset($yaml['builder']) ? new BuilderConfiguration() : null;
+        return $configuration;
     }
 
     /**
