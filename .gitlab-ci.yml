@@ -19,7 +19,8 @@ test:
     - mkdir -p DistributionPackages/${FLOW_PACKAGE_KEY}
     - shopt -s extglob
     - "mv !(DistributionPackages) DistributionPackages/${FLOW_PACKAGE_KEY}"
-    - DistributionPackages/Tests/test-distribution-composer.json < envsubst > composer.json
+    - 'echo \'{"name": "flownative/flow-test-distribution", "config": {"vendor-dir": "Packages/Libraries", "bin-dir": "bin"}, "repositories": [ {"type": "path",      "url": "DistributionPackages/*"}], "require": {"${COMPOSER_PACKAGE_NAME}": "*"}, "minimum-stability": "dev", "prefer-stable": true, "scripts": {"post-update-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall", "post-install-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall", "post-package-update": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall", "post-package-install": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall"}}\' > composer.json'
+    - composer.json < envsubst > composer.json
     - cat composer.json
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
