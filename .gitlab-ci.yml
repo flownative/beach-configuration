@@ -11,10 +11,10 @@ test:
   image: registry.gitlab.com/flownative/docker/composer:7.2
   artifacts:
     paths:
-      - '*'
+      - 'test-report.html'
     name: ${PROJECT_NAME}-${CI_COMMIT_SHA}
     when: on_success
-    expire_in: 1 day
+    expire_in: 1 month
   script:
     - ls -la
     - mkdir -p DistributionPackages/${FLOW_PACKAGE_KEY}
@@ -27,6 +27,5 @@ test:
     - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
     - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
     - composer -o -v --no-progress update
-    - pwd
     - ls -la Build/BuildEssentials/PhpUnit
-    - Packages/Libraries/phpunit/phpunit/phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/${FLOW_PACKAGE_KEY}/Tests/Unit
+    - Packages/Libraries/phpunit/phpunit/phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox-html test-report.html DistributionPackages/${FLOW_PACKAGE_KEY}/Tests/Unit
