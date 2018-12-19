@@ -27,5 +27,6 @@ test:
     - ssh-add <(echo "${CI_REPOSITORY_ACCESS_PRIVATE_KEY}")
     - mkdir -p ~/.ssh && ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
     - composer -o -v --no-progress update
-    - ls -la
-    - Packages/Libraries/phpunit/phpunit/phpunit -c /Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/${FLOW_PACKAGE_KEY}/Tests/Unit
+    - pwd
+    - ls -la Build/BuildEssentials/PhpUnit
+    - Packages/Libraries/phpunit/phpunit/phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml --testdox DistributionPackages/${FLOW_PACKAGE_KEY}/Tests/Unit
