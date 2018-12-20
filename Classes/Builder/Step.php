@@ -22,10 +22,19 @@ final class Step
     private $type;
 
     /**
+     * @var string
+     */
+    private $image;
+
+    /**
+     * @var array
+     */
+    private $script = [];
+
+    /**
      * @param string $name
      * @param array $configuration
      * @return Step
-     * @throws ParseException
      */
     public static function fromConfiguration(string $name, array $configuration): Step
     {
@@ -36,6 +45,12 @@ final class Step
             switch ($key) {
                 case 'type':
                     $instance->setType($subConfiguration);
+                break;
+                case 'image':
+                    $instance->setImage($subConfiguration);
+                break;
+                case 'script':
+                    $instance->setScript($subConfiguration);
                 break;
 //                default:
 //                    throw new ParseException(sprintf('Unknown configuration key "%s".', $key), 1545299869);
@@ -52,9 +67,28 @@ final class Step
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function type(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function image(): string
+    {
+        return $this->image;
+    }
+
+    /**
+     * @return ScriptCommandLine[]
+     */
+    public function script(): array
+    {
+        return $this->script;
     }
 
     /**
@@ -80,4 +114,30 @@ final class Step
         }
         $this->type = $type;
     }
+
+    /**
+     * @param string $image
+     * @throws ParseException
+     */
+    private function setImage(string $image): void
+    {
+        if (preg_match('|^[a-z0-9.]+(/[a-z0-9-]+)+(:[a-z0-9-_.]+)?$|', $image) !== 1) {
+            throw new ParseException(sprintf('Invalid step image "%s" set in builder configuration.', $image), 1545308567);
+        }
+        $this->image = $image;
+    }
+
+    /**
+     * @param array $subConfiguration
+     */
+    private function setScript(array $subConfiguration): void
+    {
+//        if (!is_array($subConfiguration)) {
+//            throw new ParseException(sprintf('Invalid builder steps configuration: steps must be an array, "%s" given.', gettype($subConfiguration)), 1545299545);
+//        }
+        foreach ($subConfiguration as $commandLineString) {
+            $this->script[] = ScriptCommandLine::fromString($commandLineString);
+        }
+    }
+
 }
