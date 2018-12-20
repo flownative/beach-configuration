@@ -42,7 +42,7 @@ final class Configuration
             foreach ($yaml as $key => $subConfiguration) {
                 switch ($key) {
                     case 'builder':
-                        $configuration->builder = Builder::fromYaml($subConfiguration);
+                        $configuration->builder = Builder::fromConfiguration($subConfiguration);
                     break;
                     default:
                         throw new ParseException(sprintf('Unknown configuration key "%s".', $key), 1545237279);

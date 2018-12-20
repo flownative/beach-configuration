@@ -12,9 +12,9 @@ use Flownative\Beach\Configuration\Exception\ParseException;
 final class Builder
 {
     /**
-     * @var Steps
+     * @var array
      */
-    private $steps;
+    private $steps = [];
 
     /**
      */
@@ -23,32 +23,58 @@ final class Builder
     }
 
     /**
-     * @param array $yaml
+     * @param array $configuration
      * @return Builder
      * @throws ParseException
      */
-    public static function fromYaml(array $yaml): Builder
+    public static function fromConfiguration(array $configuration): Builder
     {
         $instance = new Builder();
-
-        foreach ($yaml as $key => $subConfiguration) {
+        foreach ($configuration as $key => $subConfiguration) {
             switch ($key) {
+                case 'gitStrategy':
+                    $instance->setGitStrategy($subConfiguration);
+                break;
                 case 'steps':
-                    $instance->steps= Steps::fromYaml($subConfiguration);
+                    $instance->setSteps($subConfiguration);
                 break;
                 default:
                     throw new ParseException(sprintf('Unknown configuration key "%s".', $key), 1545238579);
             }
         }
-
         return $instance;
     }
 
     /**
-     * @return Steps|null
+     * @return Step[]
      */
-    public function steps(): ?Steps
+    public function steps(): array
     {
         return $this->steps;
+    }
+
+    /**
+     * @param $subConfiguration
+     * @throws ParseException
+     */
+    private function setSteps($subConfiguration): void
+    {
+        if (!is_array($subConfiguration)) {
+            throw new ParseException(sprintf('Invalid builder steps configuration: steps must be an array, "%s" given.', gettype($subConfiguration)), 1545299545);
+        }
+        foreach ($subConfiguration as $stepName => $stepConfiguration) {
+            $this->steps[] = Step::fromConfiguration($stepName, $stepConfiguration);
+        }
+    }
+
+    /**
+     * @param $subConfiguration
+     * @throws ParseException
+     */
+    private function setGitStrategy($subConfiguration): void
+    {
+        if ($subConfiguration !== 'clone') {
+            throw new ParseException(sprintf('Invalid git strategy option "%s" set in builder configuration.', is_string($subConfiguration) ? $subConfiguration : gettype($subConfiguration)), 1545298865);
+        }
     }
 }
