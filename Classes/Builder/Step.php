@@ -121,7 +121,7 @@ final class Step
      */
     private function setImage(string $image): void
     {
-        if (preg_match('|^[a-z0-9.]+(/[a-z0-9-]+)+(:[a-z0-9-_.]+)?$|', $image) !== 1) {
+        if (preg_match('|^[a-z0-9.]+(/[a-z0-9-]+)*(:[a-z0-9-_.]+)?$|', $image) !== 1) {
             throw new ParseException(sprintf('Invalid step image "%s" set in builder configuration.', $image), 1545308567);
         }
         $this->image = $image;

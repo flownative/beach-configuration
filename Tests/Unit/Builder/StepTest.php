@@ -98,6 +98,7 @@ class StepTest extends UnitTestCase
             ['flownative/php:latest'],
             ['flownative/php:7.3'],
             ['flownative/php:7.3.99'],
+            ['node:11.4-alpine'],
             ['eu.gcr.io/flownative-beach/php:7.3'],
             ['24.7.foo.com/-my-organization99/99designs'],
         ];
