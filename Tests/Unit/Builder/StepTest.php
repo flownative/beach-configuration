@@ -34,10 +34,11 @@ class StepTest extends UnitTestCase
      * @test
      * @dataProvider validStepNames
      * @param $name
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
      */
     public function stepAcceptsValidNames($name): void
     {
-        $step = Step::fromConfiguration($name, []);
+        $step = Step::fromConfiguration($name, ['image' => 'flownative/hello']);
         self::assertSame($name, $step->name());
     }
 
@@ -72,10 +73,20 @@ class StepTest extends UnitTestCase
     /**
      * @test
      */
-    public function stepAcceptsTypeDocker(): void
+    public function stepAcceptsExecutorDocker(): void
     {
-        $step = Step::fromConfiguration('test', ['type' => 'docker']);
-        self::assertSame('docker', $step->type());
+        $step = Step::fromConfiguration('test', ['image' => 'flownative/hello', 'executor' => 'docker']);
+        self::assertSame('docker', $step->executor());
+    }
+
+    /**
+     * @test
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
+     */
+    public function dockerExecutorIsTheDefault(): void
+    {
+        $step = Step::fromConfiguration('test', ['image' => 'flownative/hello']);
+        self::assertSame('docker', $step->executor());
     }
 
     /**
@@ -83,9 +94,9 @@ class StepTest extends UnitTestCase
      * @expectedException \Flownative\Beach\Configuration\Exception\ParseException
      * @expectedExceptionCode 1545300611
      */
-    public function stepRejectsTypesOtherThanDocker(): void
+    public function stepRejectsExecutorsOtherThanDocker(): void
     {
-        Step::fromConfiguration('test', ['type' => 'something']);
+        Step::fromConfiguration('test', ['executor' => 'something']);
     }
 
     /**
@@ -108,6 +119,7 @@ class StepTest extends UnitTestCase
      * @test
      * @dataProvider validImages
      * @param string $image
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
      */
     public function stepAcceptsValidImages(string $image): void
     {
@@ -146,15 +158,17 @@ class StepTest extends UnitTestCase
 
     /**
      * @test
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
      */
     public function scriptReturnsEmptyArrayIfNoScriptWasDefined(): void
     {
-        $step = Step::fromConfiguration('test', []);
+        $step = Step::fromConfiguration('test', ['image' => 'flownative/hello']);
         self::assertSame([], $step->script());
     }
 
     /**
      * @test
+     * @throws \Flownative\Beach\Configuration\Exception\ParseException
      */
     public function scriptReturnsArrayOfScriptCommandLines(): void
     {
@@ -165,6 +179,7 @@ class StepTest extends UnitTestCase
         $step = Step::fromConfiguration(
             'test',
             [
+                'image' => 'flownative/hello',
                 'script' =>
                 [
                     $line1,
@@ -182,5 +197,15 @@ class StepTest extends UnitTestCase
         self::assertSame($line1, (string)$commandLines[0]);
         self::assertSame($line2, (string)$commandLines[1]);
         self::assertSame($line3, (string)$commandLines[2]);
+    }
+
+    /**
+     * @test
+     * @expectedException \Flownative\Beach\Configuration\Exception\ParseException
+     * @expectedExceptionCode 1545385420
+     */
+    public function imageIsRequiredInStepConfiguration(): void
+    {
+        Step::fromConfiguration('test', ['script' => ['echo "hello"']]);
     }
 }

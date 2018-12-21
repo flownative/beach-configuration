@@ -126,11 +126,10 @@ YAML
 builder:
   steps:
     build-composer:
-      type: docker
+      executor: docker
       image: 'flownative/composer:7.2'
       script: []
     build-assets:
-      type: docker
       image: 'flownative/node-build-tools:1'
       script: []      
 YAML
@@ -141,10 +140,10 @@ YAML
 
         self::assertInstanceOf(Step::class, $steps[0]);
         self::assertSame('build-composer', (string)$steps[0]->name());
-        self::assertSame('docker', (string)$steps[0]->type());
+        self::assertSame('docker', (string)$steps[0]->executor());
 
         self::assertInstanceOf(Step::class, $steps[1]);
         self::assertSame('build-assets', (string)$steps[1]->name());
-        self::assertSame('docker', (string)$steps[0]->type());
+        self::assertSame('docker', (string)$steps[0]->executor());
     }
 }

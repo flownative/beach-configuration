@@ -19,7 +19,7 @@ final class Step
     /**
      * @var string
      */
-    private $type;
+    private $executor = 'docker';
 
     /**
      * @var string
@@ -35,6 +35,7 @@ final class Step
      * @param string $name
      * @param array $configuration
      * @return Step
+     * @throws ParseException
      */
     public static function fromConfiguration(string $name, array $configuration): Step
     {
@@ -43,8 +44,8 @@ final class Step
 
         foreach ($configuration as $key => $subConfiguration) {
             switch ($key) {
-                case 'type':
-                    $instance->setType($subConfiguration);
+                case 'executor':
+                    $instance->setExecutor($subConfiguration);
                 break;
                 case 'image':
                     $instance->setImage($subConfiguration);
@@ -56,6 +57,11 @@ final class Step
 //                    throw new ParseException(sprintf('Unknown configuration key "%s".', $key), 1545299869);
             }
         }
+
+        if ($instance->image === null) {
+            throw new ParseException(sprintf('No image specified for build step "%s".', $name), 1545385420);
+        }
+
         return $instance;
     }
 
@@ -70,9 +76,9 @@ final class Step
     /**
      * @return string
      */
-    public function type(): string
+    public function executor(): string
     {
-        return $this->type;
+        return $this->executor;
     }
 
     /**
@@ -104,15 +110,15 @@ final class Step
     }
 
     /**
-     * @param string $type
+     * @param string $executor
      * @throws ParseException
      */
-    private function setType(string $type): void
+    private function setExecutor(string $executor): void
     {
-        if ($type !== 'docker') {
-            throw new ParseException(sprintf('Invalid step type option "%s" set in builder configuration.', $type), 1545300611);
+        if ($executor !== 'docker') {
+            throw new ParseException(sprintf('Invalid step executor option "%s" set in builder configuration.', $executor), 1545300611);
         }
-        $this->type = $type;
+        $this->executor = $executor;
     }
 
     /**
