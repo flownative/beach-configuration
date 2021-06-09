@@ -7,7 +7,7 @@
         "email": "support@flownative.com"
     },
     "require": {
-        "neos/flow": "~5.1",
+        "neos/flow": "~5.1|~6.0|~7.0",
         "symfony/yaml": "4.*"
     },
     "require-dev": {
